@@ -1,0 +1,232 @@
+:root {
+  /* ═══ 现代书院色彩系统 ═══ */
+  --ink-deep: #1a1f16;
+  --ink-medium: #2d3428;
+  --ink-light: #4a5240;
+  --ink-muted: #6b7560;
+
+  --paper-cream: #f7f3ec;
+  --paper-warm: #ede8df;
+  --paper-cool: #e8e4dc;
+  --paper-white: #fafaf7;
+
+  --vermillion: #c43a31;
+  --vermillion-glow: #e04e44;
+  --vermillion-soft: rgba(196, 58, 49, 0.08);
+
+  --jade-deep: #2a6b5e;
+  --jade-medium: #3d8b7a;
+  --jade-light: #5aad9a;
+  --jade-soft: rgba(42, 107, 94, 0.08);
+
+  --gold-accent: #c9a94e;
+  --gold-light: #dfc06a;
+  --gold-soft: rgba(201, 169, 78, 0.1);
+
+  --text-primary: #1a1f16;
+  --text-secondary: #4a5240;
+  --text-tertiary: #6b7560;
+  --text-inverse: #f7f3ec;
+
+  --shadow-sm: 0 1px 3px rgba(26, 31, 22, 0.06);
+  --shadow-md: 0 4px 16px rgba(26, 31, 22, 0.08);
+  --shadow-lg: 0 12px 40px rgba(26, 31, 22, 0.12);
+  --shadow-glow: 0 0 30px rgba(196, 58, 49, 0.08);
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #app {
+  height: 100%;
+  font-family: 'Noto Serif SC', 'Source Han Serif SC', 'STSong', 'SimSun', serif;
+  color: var(--text-primary);
+  background: var(--paper-cream);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ═══ 自定义滚动条 ═══ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ink-muted);
+  border-radius: 3px;
+  &:hover {
+    background: var(--ink-light);
+  }
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ═══ 全局工具类 ═══ */
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.page-container {
+  padding: 24px;
+  min-height: 100%;
+  background: var(--paper-cream);
+}
+
+.card-container {
+  background: var(--paper-white);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(26, 31, 22, 0.04);
+  transition: box-shadow var(--transition-smooth);
+  &:hover {
+    box-shadow: var(--shadow-md);
+  }
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: var(--paper-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(26, 31, 22, 0.04);
+
+  .el-input, .el-select {
+    width: 220px;
+  }
+}
+
+.table-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--paper-warm);
+}
+
+/* ═══ Element Plus 主题覆盖 ═══ */
+.el-button--primary {
+  --el-button-bg-color: var(--jade-deep);
+  --el-button-border-color: var(--jade-deep);
+  --el-button-hover-bg-color: var(--jade-medium);
+  --el-button-hover-border-color: var(--jade-medium);
+  --el-button-active-bg-color: var(--ink-medium);
+  --el-button-active-border-color: var(--ink-medium);
+}
+
+.el-button--danger {
+  --el-button-bg-color: var(--vermillion);
+  --el-button-border-color: var(--vermillion);
+  --el-button-hover-bg-color: var(--vermillion-glow);
+  --el-button-hover-border-color: var(--vermillion-glow);
+}
+
+.el-menu {
+  border-right: none !important;
+}
+
+.el-table {
+  --el-table-border-color: var(--paper-warm);
+  --el-table-header-bg-color: var(--paper-warm);
+  --el-table-row-hover-bg-color: var(--jade-soft);
+}
+
+.el-input__wrapper {
+  border-radius: var(--radius-sm) !important;
+}
+
+.el-dialog {
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden;
+}
+
+.el-tag {
+  border-radius: 20px;
+}
+
+/* ═══ 动画关键帧 ═══ */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(3deg); }
+}
+
+@keyframes brushStroke {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}

@@ -1,0 +1,14 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: sap-gateway
+
+jwt:
+  secret: sap-student-affairs-platform-jwt-secret-key-2024-very-long-secret
+  expiration: 86400000
+
+logging:
+  level:
+    com.sap: debug

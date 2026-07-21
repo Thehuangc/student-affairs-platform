@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>学生综合事务中台 - 登录</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:'Georgia','Noto Serif SC',serif;background:linear-gradient(135deg,#1a1f16,#2d3428);position:relative;overflow:hidden}
+.bg{position:absolute;border-radius:50%;filter:blur(80px);opacity:.15}
+.bg:nth-child(1){width:600px;height:600px;background:#2a6b5e;top:-200px;left:-100px}
+.bg:nth-child(2){width:400px;height:400px;background:#c43a31;bottom:-150px;right:-100px}
+.box{position:relative;display:flex;width:780px;min-height:460px;background:#fafaf7;border-radius:24px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,.5)}
+.left{width:300px;background:linear-gradient(135deg,#2a6b5e,#2d3428);padding:50px 30px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#f7f3ec}
+.seal{width:64px;height:64px;border:2px solid #c43a31;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:24px;transform:rotate(-5deg)}
+.seal span{font-size:32px;font-weight:700;color:#c43a31;font-family:'STKaiti','KaiTi',serif}
+.left h1{font-size:26px;letter-spacing:4px;margin-bottom:12px;font-family:'STKaiti','KaiTi',serif}
+.dv{width:40px;height:2px;background:#c9a94e;margin:0 auto 12px;animation:brush 1s ease forwards;clip-path:inset(0 100% 0 0)}
+@keyframes brush{to{clip-path:inset(0 0 0 0)}}
+.left p{font-size:12px;opacity:.6;letter-spacing:2px;margin-bottom:24px}
+.poem{font-size:13px;line-height:2.2;letter-spacing:4px;opacity:.4;font-family:'STKaiti','KaiTi',serif}
+.right{flex:1;padding:50px;display:flex;flex-direction:column;justify-content:center}
+.right h2{font-size:24px;color:#1a1f16;margin-bottom:6px}
+.right .sub{font-size:13px;color:#6b7560;margin-bottom:28px}
+.grp{margin-bottom:18px}
+.grp label{display:block;font-size:12px;color:#4a5240;margin-bottom:6px;font-weight:500}
+.grp input{width:100%;height:44px;padding:0 14px;border:1.5px solid #e8e4dc;border-radius:8px;font-size:14px;color:#1a1f16;background:#f7f3ec;transition:all .2s}
+.grp input:focus{outline:none;border-color:#2a6b5e;background:#fff;box-shadow:0 0 0 3px rgba(42,107,94,.08)}
+.grp input::placeholder{color:#6b7560}
+.btn{width:100%;height:44px;background:linear-gradient(135deg,#2a6b5e,#3d8b7a);color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:600;letter-spacing:6px;cursor:pointer;transition:all .2s;font-family:inherit}
+.btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(42,107,94,.4)}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.err{color:#c43a31;font-size:12px;margin-bottom:8px;display:none}
+.ft{margin-top:20px;padding-top:14px;border-top:1px solid #e8e4dc;text-align:center}
+.ft span{font-size:11px;color:#6b7560}
+.chips{display:flex;justify-content:center;gap:6px;margin-top:8px}
+.chip{padding:4px 12px;background:#f7f3ec;border:1px solid #e8e4dc;border-radius:12px;font-size:11px;color:#4a5240;cursor:pointer;transition:all .2s}
+.chip:hover{border-color:#2a6b5e;color:#2a6b5e}
+</style>
+</head>
+<body>
+<div class="bg"></div><div class="bg"></div>
+<div class="box">
+  <div class="left">
+    <div class="seal"><span>学</span></div>
+    <h1>学生综合事务中台</h1>
+    <div class="dv"></div>
+    <p>Student Affairs Platform</p>
+    <div class="poem">博学之<br>审问之<br>慎思之<br>明辨之<br>笃行之</div>
+  </div>
+  <div class="right">
+    <h2>欢迎回来</h2>
+    <p class="sub">请登录您的账号</p>
+    <div class="err" id="err"></div>
+    <div class="grp">
+      <label>用户名</label>
+      <input type="text" id="u" placeholder="请输入用户名" autofocus>
+    </div>
+    <div class="grp">
+      <label>密码</label>
+      <input type="password" id="p" placeholder="请输入密码" onkeydown="if(event.key==='Enter')login()">
+    </div>
+    <button class="btn" id="btn" onclick="login()">登 录</button>
+    <div class="ft">
+      <span>快速选择</span>
+      <div class="chips">
+        <span class="chip" onclick="f('admin','admin123')">管理员</span>
+        <span class="chip" onclick="f('student','admin123')">学生</span>
+        <span class="chip" onclick="f('teacher','admin123')">教师</span>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function f(u,p){document.getElementById('u').value=u;document.getElementById('p').value=p}
+async function login(){
+  const btn=document.getElementById('btn'),err=document.getElementById('err');
+  const u=document.getElementById('u').value.trim(),p=document.getElementById('p').value.trim();
+  if(!u||!p){err.textContent='请输入用户名和密码';err.style.display='block';return}
+  btn.disabled=true;btn.textContent='登录中...';err.style.display='none'
+  try{
+    const r=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});
+    const d=await r.json()
+    if(d.code===200){
+      localStorage.setItem('token',d.data.token)
+      localStorage.setItem('user',JSON.stringify(d.data))
+      window.location.href='/dashboard'
+    }else{err.textContent=d.msg||'登录失败';err.style.display='block'}
+  }catch(e){err.textContent='网络错误，请重试';err.style.display='block'}
+  finally{btn.disabled=false;btn.textContent='登 录'}
+}
+</script>
+</body>
+</html>

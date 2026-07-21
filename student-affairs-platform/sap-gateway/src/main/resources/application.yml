@@ -1,0 +1,100 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: sap-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        namespace: sap
+      config:
+        server-addr: 127.0.0.1:8848
+        namespace: sap
+        file-extension: yml
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        # 认证服务
+        - id: sap-auth
+          uri: lb://sap-auth
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=1
+        # 系统管理服务
+        - id: sap-system
+          uri: lb://sap-system
+          predicates:
+            - Path=/system/**
+          filters:
+            - StripPrefix=1
+        # 团员发展服务
+        - id: sap-league
+          uri: lb://sap-league
+          predicates:
+            - Path=/league/**
+          filters:
+            - StripPrefix=1
+        # 社团活动服务
+        - id: sap-club
+          uri: lb://sap-club
+          predicates:
+            - Path=/club/**
+          filters:
+            - StripPrefix=1
+        # 志愿服务
+        - id: sap-volunteer
+          uri: lb://sap-volunteer
+          predicates:
+            - Path=/volunteer/**
+          filters:
+            - StripPrefix=1
+        # 勤工助学服务
+        - id: sap-workstudy
+          uri: lb://sap-workstudy
+          predicates:
+            - Path=/workstudy/**
+          filters:
+            - StripPrefix=1
+        # 消息通知服务
+        - id: sap-notification
+          uri: lb://sap-notification
+          predicates:
+            - Path=/notification/**
+          filters:
+            - StripPrefix=1
+
+  # Redis配置
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password:
+      database: 0
+
+# 白名单路径（不需要鉴权）
+gateway:
+  white-list:
+    - /auth/login
+    - /auth/register
+    - /auth/captcha
+    - /auth/sms-code
+    - /**/v3/api-docs/**
+    - /swagger-resources/**
+    - /webjars/**
+    - /doc.html
+
+# JWT配置
+jwt:
+  secret: sap-student-affairs-platform-jwt-secret-key-2024
+  expiration: 86400000
+
+logging:
+  level:
+    com.sap.gateway: debug
+    org.springframework.cloud.gateway: info

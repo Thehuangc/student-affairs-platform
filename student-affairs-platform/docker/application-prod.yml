@@ -1,0 +1,121 @@
+# 生产环境配置
+# 文件位置: sap-gateway/src/main/resources/application-prod.yml
+
+server:
+  port: 8080
+
+spring:
+  application:
+    name: sap-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        namespace: sap
+      config:
+        server-addr: 127.0.0.1:8848
+        namespace: sap
+        file-extension: yml
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        # 认证服务
+        - id: sap-auth
+          uri: lb://sap-auth
+          predicates:
+            - Path=/api/auth/**
+          filters:
+            - StripPrefix=2
+        # 系统管理服务
+        - id: sap-system
+          uri: lb://sap-system
+          predicates:
+            - Path=/api/system/**
+          filters:
+            - StripPrefix=2
+        # 团员发展服务
+        - id: sap-league
+          uri: lb://sap-league
+          predicates:
+            - Path=/api/league/**
+          filters:
+            - StripPrefix=2
+        # 社团活动服务
+        - id: sap-club
+          uri: lb://sap-club
+          predicates:
+            - Path=/api/club/**
+          filters:
+            - StripPrefix=2
+        # 志愿服务
+        - id: sap-volunteer
+          uri: lb://sap-volunteer
+          predicates:
+            - Path=/api/volunteer/**
+          filters:
+            - StripPrefix=2
+        # 勤工助学服务
+        - id: sap-workstudy
+          uri: lb://sap-workstudy
+          predicates:
+            - Path=/api/workstudy/**
+          filters:
+            - StripPrefix=2
+        # 消息通知服务
+        - id: sap-notification
+          uri: lb://sap-notification
+          predicates:
+            - Path=/api/notification/**
+          filters:
+            - StripPrefix=2
+
+  # Redis配置
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password:
+      database: 0
+
+# 白名单路径（不需要鉴权）
+gateway:
+  white-list:
+    - /api/auth/login
+    - /api/auth/register
+    - /api/auth/captcha
+    - /api/auth/sms-code
+    - /**/v3/api-docs/**
+    - /swagger-resources/**
+    - /webjars/**
+    - /doc.html
+
+# JWT配置
+jwt:
+  secret: sap-student-affairs-platform-jwt-secret-key-2024
+  expiration: 86400000
+
+# 日志配置
+logging:
+  level:
+    root: INFO
+    com.sap: INFO
+    org.springframework.cloud.gateway: INFO
+  file:
+    name: /opt/sap-service/logs/gateway.log
+  logback:
+    rollingpolicy:
+      max-file-size: 100MB
+      max-history: 30
+
+# Actuator端点（健康检查）
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
