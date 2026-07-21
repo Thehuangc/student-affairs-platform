@@ -6,36 +6,36 @@
 <title>学生综合事务中台 - 登录</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:'Georgia','Noto Serif SC',serif;background:linear-gradient(135deg,#1a1f16,#2d3428);position:relative;overflow:hidden}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:'Georgia','Noto Serif SC',serif;background:linear-gradient(135deg,#1a2332,#243447);position:relative;overflow:hidden}
 .bg{position:absolute;border-radius:50%;filter:blur(80px);opacity:.15}
-.bg:nth-child(1){width:600px;height:600px;background:#2a6b5e;top:-200px;left:-100px}
-.bg:nth-child(2){width:400px;height:400px;background:#c43a31;bottom:-150px;right:-100px}
-.box{position:relative;display:flex;width:780px;min-height:460px;background:#fafaf7;border-radius:24px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,.5)}
-.left{width:300px;background:linear-gradient(135deg,#2a6b5e,#2d3428);padding:50px 30px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#f7f3ec}
-.seal{width:64px;height:64px;border:2px solid #c43a31;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:24px;transform:rotate(-5deg)}
-.seal span{font-size:32px;font-weight:700;color:#c43a31;font-family:'STKaiti','KaiTi',serif}
+.bg:nth-child(1){width:600px;height:600px;background:#3b82f6;top:-200px;left:-100px}
+.bg:nth-child(2){width:400px;height:400px;background:#60a5fa;bottom:-150px;right:-100px}
+.box{position:relative;display:flex;width:780px;min-height:460px;background:#f8fafc;border-radius:24px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,.5)}
+.left{width:300px;background:linear-gradient(135deg,#3b82f6,#1e40af);padding:50px 30px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#f8fafc}
+.seal{width:64px;height:64px;border:2px solid #e74c3c;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:24px;transform:rotate(-5deg)}
+.seal span{font-size:32px;font-weight:700;color:#e74c3c;font-family:'STKaiti','KaiTi',serif}
 .left h1{font-size:26px;letter-spacing:4px;margin-bottom:12px;font-family:'STKaiti','KaiTi',serif}
-.dv{width:40px;height:2px;background:#c9a94e;margin:0 auto 12px;animation:brush 1s ease forwards;clip-path:inset(0 100% 0 0)}
+.dv{width:40px;height:2px;background:#f59e0b;margin:0 auto 12px;animation:brush 1s ease forwards;clip-path:inset(0 100% 0 0)}
 @keyframes brush{to{clip-path:inset(0 0 0 0)}}
 .left p{font-size:12px;opacity:.6;letter-spacing:2px;margin-bottom:24px}
 .poem{font-size:13px;line-height:2.2;letter-spacing:4px;opacity:.4;font-family:'STKaiti','KaiTi',serif}
 .right{flex:1;padding:50px;display:flex;flex-direction:column;justify-content:center}
-.right h2{font-size:24px;color:#1a1f16;margin-bottom:6px}
-.right .sub{font-size:13px;color:#6b7560;margin-bottom:28px}
+.right h2{font-size:24px;color:#1e293b;margin-bottom:6px}
+.right .sub{font-size:13px;color:#64748b;margin-bottom:28px}
 .grp{margin-bottom:18px}
-.grp label{display:block;font-size:12px;color:#4a5240;margin-bottom:6px;font-weight:500}
-.grp input{width:100%;height:44px;padding:0 14px;border:1.5px solid #e8e4dc;border-radius:8px;font-size:14px;color:#1a1f16;background:#f7f3ec;transition:all .2s}
-.grp input:focus{outline:none;border-color:#2a6b5e;background:#fff;box-shadow:0 0 0 3px rgba(42,107,94,.08)}
-.grp input::placeholder{color:#6b7560}
-.btn{width:100%;height:44px;background:linear-gradient(135deg,#2a6b5e,#3d8b7a);color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:600;letter-spacing:6px;cursor:pointer;transition:all .2s;font-family:inherit}
-.btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(42,107,94,.4)}
+.grp label{display:block;font-size:12px;color:#475569;margin-bottom:6px;font-weight:500}
+.grp input{width:100%;height:44px;padding:0 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;color:#1e293b;background:#f0f4f8;transition:all .2s}
+.grp input:focus{outline:none;border-color:#3b82f6;background:#fff;box-shadow:0 0 0 3px rgba(59,130,246,.08)}
+.grp input::placeholder{color:#64748b}
+.btn{width:100%;height:44px;background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:600;letter-spacing:6px;cursor:pointer;transition:all .2s;font-family:inherit}
+.btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(59,130,246,.4)}
 .btn:disabled{opacity:.6;cursor:not-allowed}
-.err{color:#c43a31;font-size:12px;margin-bottom:8px;display:none}
-.ft{margin-top:20px;padding-top:14px;border-top:1px solid #e8e4dc;text-align:center}
-.ft span{font-size:11px;color:#6b7560}
+.err{color:#e74c3c;font-size:12px;margin-bottom:8px;display:none}
+.ft{margin-top:20px;padding-top:14px;border-top:1px solid #e2e8f0;text-align:center}
+.ft span{font-size:11px;color:#64748b}
 .chips{display:flex;justify-content:center;gap:6px;margin-top:8px}
-.chip{padding:4px 12px;background:#f7f3ec;border:1px solid #e8e4dc;border-radius:12px;font-size:11px;color:#4a5240;cursor:pointer;transition:all .2s}
-.chip:hover{border-color:#2a6b5e;color:#2a6b5e}
+.chip{padding:4px 12px;background:#f0f4f8;border:1px solid #e2e8f0;border-radius:12px;font-size:11px;color:#475569;cursor:pointer;transition:all .2s}
+.chip:hover{border-color:#3b82f6;color:#3b82f6}
 </style>
 </head>
 <body>
@@ -66,7 +66,6 @@ body{min-height:100vh;display:flex;align-items:center;justify-content:center;fon
       <div class="chips">
         <span class="chip" onclick="f('admin','admin123')">管理员</span>
         <span class="chip" onclick="f('student','admin123')">学生</span>
-        <span class="chip" onclick="f('teacher','admin123')">教师</span>
       </div>
     </div>
   </div>

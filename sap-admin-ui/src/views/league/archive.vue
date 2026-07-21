@@ -7,7 +7,7 @@
       </div>
     </div>
     <div class="card-container" style="margin-top: 24px;">
-      <div style="margin-bottom:16px">
+      <div v-if="isAdmin" style="margin-bottom:16px">
         <el-button type="primary" @click="handleAdd">生成档案</el-button>
       </div>
       <el-table :data="archiveList" v-loading="loading" border stripe>
@@ -16,7 +16,9 @@
         <el-table-column prop="archive_name" label="档案名称" min-width="200" />
         <el-table-column prop="user_id" label="用户ID" width="80" />
         <el-table-column prop="file_type" label="文件类型" width="100" />
-        <el-table-column prop="generate_time" label="生成时间" width="170" />
+        <el-table-column label="生成时间" width="160">
+          <template #default="{ row }">{{ formatDateTime(row.generate_time) }}</template>
+        </el-table-column>
         <el-table-column label="状态" width="90" align="center">
           <template #default="{ row }">
             <el-tag :type="row.status === 1 ? 'success' : 'info'" size="small">
@@ -60,6 +62,10 @@
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { getArchivePage, createArchive } from '@/api/league'
+import { usePermission } from '@/utils/permission'
+import { formatDateTime } from '@/utils/date'
+
+const { isAdmin } = usePermission()
 
 const loading = ref(false)
 const total = ref(0)

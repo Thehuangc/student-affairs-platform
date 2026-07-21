@@ -13,7 +13,7 @@
         <el-button type="primary" @click="handleQuery">查询</el-button>
         <el-button @click="resetQuery">重置</el-button>
         <div style="flex:1" />
-        <el-button type="primary" @click="handleAdd">新增考勤</el-button>
+        <el-button v-if="isAdmin" type="primary" @click="handleAdd">新增考勤</el-button>
       </div>
 
       <el-table :data="attendanceList" v-loading="loading" border stripe>
@@ -22,8 +22,12 @@
         <el-table-column prop="user_id" label="用户ID" width="80" />
         <el-table-column prop="position_id" label="岗位ID" width="80" />
         <el-table-column prop="check_date" label="日期" width="110" />
-        <el-table-column prop="check_in_time" label="签到时间" width="170" />
-        <el-table-column prop="check_out_time" label="签退时间" width="170" />
+        <el-table-column label="签到时间" width="160">
+          <template #default="{ row }">{{ formatDateTime(row.check_in_time) }}</template>
+        </el-table-column>
+        <el-table-column label="签退时间" width="160">
+          <template #default="{ row }">{{ formatDateTime(row.check_out_time) }}</template>
+        </el-table-column>
         <el-table-column prop="work_hours" label="工时" width="80" align="center">
           <template #default="{ row }">{{ Number(row.work_hours).toFixed(2) }}</template>
         </el-table-column>
@@ -34,7 +38,7 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="130" fixed="right">
+        <el-table-column v-if="isAdmin" label="操作" width="130" fixed="right">
           <template #default="{ row }">
             <el-button v-if="row.status === 0" type="success" link size="small" @click="handleAudit(row, 1)">通过</el-button>
             <el-button v-if="row.status === 0" type="danger" link size="small" @click="handleAudit(row, 2)">异常</el-button>
@@ -83,6 +87,10 @@
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { getAttendancePage, createAttendance, auditAttendance } from '@/api/workstudy'
+import { usePermission } from '@/utils/permission'
+import { formatDateTime } from '@/utils/date'
+
+const { isAdmin } = usePermission()
 
 const loading = ref(false)
 const total = ref(0)

@@ -1,40 +1,40 @@
 :root {
-  /* ═══ 现代书院色彩系统 ═══ */
-  --ink-deep: #1a1f16;
-  --ink-medium: #2d3428;
-  --ink-light: #4a5240;
-  --ink-muted: #6b7560;
+  /* ═══ 浅蓝色调色彩系统 ═══ */
+  --ink-deep: #1a2332;
+  --ink-medium: #243447;
+  --ink-light: #3d5066;
+  --ink-muted: #6b7f96;
 
-  --paper-cream: #f7f3ec;
-  --paper-warm: #ede8df;
-  --paper-cool: #e8e4dc;
-  --paper-white: #fafaf7;
+  --paper-cream: #f0f4f8;
+  --paper-warm: #e2e8f0;
+  --paper-cool: #dde5ed;
+  --paper-white: #f8fafc;
 
-  --vermillion: #c43a31;
-  --vermillion-glow: #e04e44;
-  --vermillion-soft: rgba(196, 58, 49, 0.08);
+  --vermillion: #e74c3c;
+  --vermillion-glow: #ff6b6b;
+  --vermillion-soft: rgba(231, 76, 60, 0.08);
 
-  --jade-deep: #2a6b5e;
-  --jade-medium: #3d8b7a;
-  --jade-light: #5aad9a;
-  --jade-soft: rgba(42, 107, 94, 0.08);
+  --jade-deep: #3b82f6;
+  --jade-medium: #60a5fa;
+  --jade-light: #93c5fd;
+  --jade-soft: rgba(59, 130, 246, 0.08);
 
-  --gold-accent: #c9a94e;
-  --gold-light: #dfc06a;
-  --gold-soft: rgba(201, 169, 78, 0.1);
+  --gold-accent: #f59e0b;
+  --gold-light: #fbbf24;
+  --gold-soft: rgba(245, 158, 11, 0.1);
 
-  --text-primary: #1a1f16;
-  --text-secondary: #4a5240;
-  --text-tertiary: #6b7560;
-  --text-inverse: #f7f3ec;
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-tertiary: #64748b;
+  --text-inverse: #f8fafc;
 
-  --shadow-sm: 0 1px 3px rgba(26, 31, 22, 0.06);
-  --shadow-md: 0 4px 16px rgba(26, 31, 22, 0.08);
-  --shadow-lg: 0 12px 40px rgba(26, 31, 22, 0.12);
-  --shadow-glow: 0 0 30px rgba(196, 58, 49, 0.08);
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.1);
+  --shadow-lg: 0 12px 40px rgba(15, 23, 42, 0.15);
+  --shadow-glow: 0 0 30px rgba(59, 130, 246, 0.12);
 
-  --radius-sm: 6px;
-  --radius-md: 10px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 24px;
 
@@ -51,11 +51,13 @@
 
 html, body, #app {
   height: 100%;
-  font-family: 'Noto Serif SC', 'Source Han Serif SC', 'STSong', 'SimSun', serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   color: var(--text-primary);
-  background: var(--paper-cream);
+  background: linear-gradient(135deg, #e8f0fe 0%, #f0f4f8 100%);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  letter-spacing: 0.3px;
+  line-height: 1.6;
 }
 
 /* ═══ 自定义滚动条 ═══ */

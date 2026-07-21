@@ -19,11 +19,11 @@
         <el-table-column prop="id" label="ID" width="70" />
         <el-table-column prop="real_name" label="姓名" width="100" />
         <el-table-column prop="user_id" label="用户ID" width="80" />
-        <el-table-column label="签到时间" width="170">
-          <template #default="{ row }">{{ row.check_in_time || '-' }}</template>
+        <el-table-column label="签到时间" width="160">
+          <template #default="{ row }">{{ formatDateTime(row.check_in_time) }}</template>
         </el-table-column>
-        <el-table-column label="签退时间" width="170">
-          <template #default="{ row }">{{ row.check_out_time || '-' }}</template>
+        <el-table-column label="签退时间" width="160">
+          <template #default="{ row }">{{ formatDateTime(row.check_out_time) }}</template>
         </el-table-column>
         <el-table-column label="时长(小时)" width="110" align="center">
           <template #default="{ row }">{{ row.duration ? Number(row.duration).toFixed(2) : '-' }}</template>
@@ -50,6 +50,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { getActivityPage } from '@/api/volunteer'
 import request from '@/utils/request'
+import { formatDateTime } from '@/utils/date'
 
 const loading = ref(false)
 const total = ref(0)

@@ -34,7 +34,7 @@
             </el-menu-item>
 
             <!-- 系统管理 -->
-            <el-sub-menu index="/system">
+            <el-sub-menu v-if="isAdmin" index="/system">
               <template #title>
                 <el-icon class="nav-icon"><Setting /></el-icon>
                 <span>系统管理</span>
@@ -194,11 +194,14 @@
 import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
+import { usePermission } from '@/utils/permission'
 import {
   HomeFilled, Setting, User, UserFilled, StarFilled, Document,
   Checked, Files, HelpFilled, Calendar, Location, Timer,
   Briefcase, Postcard, Clock, Money, Fold, Expand
 } from '@element-plus/icons-vue'
+
+const { isAdmin } = usePermission()
 
 // 图标映射（替代全局注册）
 const iconMap: Record<string, any> = {

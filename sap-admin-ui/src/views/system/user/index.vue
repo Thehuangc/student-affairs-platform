@@ -42,6 +42,9 @@
             </el-tag>
           </template>
         </el-table-column>
+        <el-table-column label="创建时间" width="160">
+          <template #default="{ row }">{{ formatDateTime(row.created_at) }}</template>
+        </el-table-column>
         <el-table-column label="操作" width="240" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" link size="small" @click="handleEdit(row)">编辑</el-button>
@@ -122,7 +125,6 @@
             <el-form-item label="角色" prop="roles">
               <el-select v-model="formData.roles" style="width:100%">
                 <el-option label="学生" value="student" />
-                <el-option label="教师" value="teacher" />
                 <el-option label="管理员" value="admin" />
               </el-select>
             </el-form-item>
@@ -146,6 +148,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { getUserList, addUser, updateUser, deleteUser, resetUserPwd } from '@/api/user'
+import { formatDateTime } from '@/utils/date'
 
 const loading = ref(false)
 const total = ref(0)

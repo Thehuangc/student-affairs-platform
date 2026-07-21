@@ -110,7 +110,6 @@
               <div class="account-chips">
                 <span class="chip" @click="fillAccount('admin', 'admin123')">管理员</span>
                 <span class="chip" @click="fillAccount('student', 'admin123')">学生</span>
-                <span class="chip" @click="fillAccount('teacher', 'admin123')">教师</span>
               </div>
             </div>
           </div>
@@ -233,7 +232,7 @@ async function handleLogin() {
     left: 0;
     right: 0;
     height: 200px;
-    background: linear-gradient(180deg, transparent 0%, rgba(26, 31, 22, 0.5) 100%);
+    background: linear-gradient(180deg, transparent 0%, rgba(26, 35, 50, 0.5) 100%);
     clip-path: polygon(0 100%, 5% 70%, 15% 85%, 25% 60%, 35% 75%, 45% 50%, 55% 65%, 65% 45%, 75% 60%, 85% 40%, 95% 55%, 100% 100%);
   }
 }
@@ -293,7 +292,7 @@ async function handleLogin() {
       font-size: 36px;
       font-weight: 700;
       color: var(--vermillion);
-      font-family: 'STKaiti', 'KaiTi', serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
     }
   }
 
@@ -302,7 +301,7 @@ async function handleLogin() {
     font-weight: 700;
     letter-spacing: 8px;
     margin-bottom: 16px;
-    font-family: 'STKaiti', 'KaiTi', 'Noto Serif SC', serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
 
     .char {
       display: inline-block;
@@ -326,7 +325,7 @@ async function handleLogin() {
     text-transform: uppercase;
     opacity: 0.6;
     margin-bottom: 40px;
-    font-family: 'Georgia', serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
   }
 
   .poem-block {
@@ -335,7 +334,7 @@ async function handleLogin() {
       letter-spacing: 6px;
       line-height: 2.2;
       opacity: 0.5;
-      font-family: 'STKaiti', 'KaiTi', serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
     }
   }
 
@@ -381,7 +380,7 @@ async function handleLogin() {
       font-weight: 700;
       color: var(--ink-deep);
       margin-bottom: 8px;
-      font-family: 'Noto Serif SC', serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
     }
     p {
       font-size: 14px;
@@ -452,7 +451,7 @@ async function handleLogin() {
   position: relative;
   overflow: hidden;
   transition: all var(--transition-smooth);
-  font-family: 'Noto Serif SC', serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
 
   &::before {
     content: '';

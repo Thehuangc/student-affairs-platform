@@ -16,6 +16,8 @@
         </el-select>
         <el-button type="primary" @click="handleQuery">查询</el-button>
         <el-button @click="resetQuery">重置</el-button>
+        <div style="flex:1" />
+        <el-button type="primary" @click="handleAdd">新增申请</el-button>
       </div>
 
       <el-table :data="applicationList" v-loading="loading" border stripe>
@@ -33,12 +35,14 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="created_at" label="申请时间" width="170" />
+        <el-table-column label="申请时间" width="160">
+          <template #default="{ row }">{{ formatDateTime(row.created_at) }}</template>
+        </el-table-column>
         <el-table-column label="操作" width="200" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" link size="small" @click="handleDetail(row)">详情</el-button>
-            <el-button v-if="row.status === 0" type="success" link size="small" @click="handleReview(row, 1)">通过</el-button>
-            <el-button v-if="row.status === 0" type="danger" link size="small" @click="handleReview(row, 2)">驳回</el-button>
+            <el-button v-if="canReview && row.status === 0" type="success" link size="small" @click="handleReview(row, 1)">通过</el-button>
+            <el-button v-if="canReview && row.status === 0" type="danger" link size="small" @click="handleReview(row, 2)">驳回</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -87,13 +91,64 @@
         <el-button type="primary" :loading="reviewLoading" @click="handleReviewSubmit">确认</el-button>
       </template>
     </el-dialog>
+
+    <!-- 新增申请对话框 -->
+    <el-dialog v-model="addVisible" title="入团申请" width="600px">
+      <el-form ref="addFormRef" :model="addForm" :rules="addRules" label-width="100px">
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="姓名" prop="realName">
+              <el-input v-model="addForm.realName" placeholder="请输入姓名" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="学号" prop="studentNo">
+              <el-input v-model="addForm.studentNo" placeholder="请输入学号" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="学院" prop="college">
+              <el-input v-model="addForm.college" placeholder="请输入学院" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="专业" prop="major">
+              <el-input v-model="addForm.major" placeholder="请输入专业" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="班级" prop="className">
+              <el-input v-model="addForm.className" placeholder="请输入班级" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="手机号" prop="phone">
+              <el-input v-model="addForm.phone" placeholder="请输入手机号" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="申请理由" prop="applyReason">
+              <el-input v-model="addForm.applyReason" type="textarea" :rows="4" placeholder="请阐述您的入团申请理由" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <template #footer>
+        <el-button @click="addVisible = false">取消</el-button>
+        <el-button type="primary" :loading="addLoading" @click="handleAddSubmit">提交申请</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getApplicationPage, getApplicationDetail, reviewApplication } from '@/api/league'
+import { getApplicationPage, getApplicationDetail, submitApplication, reviewApplication } from '@/api/league'
+import { usePermission } from '@/utils/permission'
+import { formatDateTime } from '@/utils/date'
+
+const { isAdmin, canEdit, canReview } = usePermission()
 
 const loading = ref(false)
 const total = ref(0)
@@ -102,8 +157,27 @@ const detailVisible = ref(false)
 const reviewVisible = ref(false)
 const reviewLoading = ref(false)
 const detailData = ref<any>({})
+const addVisible = ref(false)
+const addLoading = ref(false)
+const addFormRef = ref()
 const reviewFormRef = ref()
 const currentReviewId = ref(0)
+
+const addForm = reactive({
+  realName: '',
+  studentNo: '',
+  college: '',
+  major: '',
+  className: '',
+  phone: '',
+  applyReason: ''
+})
+
+const addRules = {
+  realName: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
+  studentNo: [{ required: true, message: '请输入学号', trigger: 'blur' }],
+  applyReason: [{ required: true, message: '请输入申请理由', trigger: 'blur' }]
+}
 
 const queryParams = reactive({
   realName: '',
@@ -141,6 +215,31 @@ function resetQuery() {
   queryParams.status = undefined
   queryParams.pageNum = 1
   handleQuery()
+}
+
+function handleAdd() {
+  Object.assign(addForm, { realName: '', studentNo: '', college: '', major: '', className: '', phone: '', applyReason: '' })
+  addVisible.value = true
+}
+
+async function handleAddSubmit() {
+  const valid = await addFormRef.value.validate().catch(() => false)
+  if (!valid) return
+  addLoading.value = true
+  try {
+    const res: any = await submitApplication(addForm)
+    if (res.code === 200) {
+      ElMessage.success('申请提交成功')
+      addVisible.value = false
+      handleQuery()
+    } else {
+      ElMessage.error(res.msg)
+    }
+  } catch (e) {
+    ElMessage.error('提交失败')
+  } finally {
+    addLoading.value = false
+  }
 }
 
 async function handleDetail(row: any) {

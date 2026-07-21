@@ -31,7 +31,9 @@
           </template>
         </el-table-column>
         <el-table-column prop="stat_month" label="统计月份" width="100" align="center" />
-        <el-table-column prop="created_at" label="记录时间" width="170" />
+        <el-table-column label="记录时间" width="160">
+          <template #default="{ row }">{{ formatDateTime(row.created_at) }}</template>
+        </el-table-column>
       </el-table>
 
       <div class="pagination-container">
@@ -44,6 +46,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { getHoursPage } from '@/api/volunteer'
+import { formatDateTime } from '@/utils/date'
 
 const loading = ref(false)
 const total = ref(0)

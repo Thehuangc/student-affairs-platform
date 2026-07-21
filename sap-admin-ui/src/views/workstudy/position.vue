@@ -16,7 +16,7 @@
         <el-button type="primary" @click="handleQuery">查询</el-button>
         <el-button @click="resetQuery">重置</el-button>
         <div style="flex:1" />
-        <el-button type="primary" @click="handleAdd">新增岗位</el-button>
+        <el-button v-if="isAdmin" type="primary" @click="handleAdd">新增岗位</el-button>
       </div>
 
       <el-table :data="positionList" v-loading="loading" border stripe>
@@ -38,7 +38,7 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="180" fixed="right">
+        <el-table-column v-if="isAdmin" label="操作" width="180" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" link size="small" @click="handleEdit(row)">编辑</el-button>
             <el-button type="danger" link size="small" @click="handleDelete(row)">删除</el-button>
@@ -133,6 +133,9 @@
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { getPositionPage, createPosition, updatePosition, deletePosition } from '@/api/workstudy'
+import { usePermission } from '@/utils/permission'
+
+const { isAdmin, canEdit, canDelete } = usePermission()
 
 const loading = ref(false)
 const total = ref(0)

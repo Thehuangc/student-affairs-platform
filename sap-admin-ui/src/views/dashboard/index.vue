@@ -206,7 +206,7 @@ const statsCards = computed(() => [
     title: '用户总数',
     value: stats.totalUsers.toLocaleString(),
     icon: '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
-    iconBg: 'linear-gradient(135deg, var(--jade-deep), var(--jade-medium))',
+    iconBg: 'linear-gradient(135deg, #3b82f6, #60a5fa)',
     trend: 'up',
     trendValue: '实时'
   },
@@ -250,7 +250,7 @@ const shortcuts = ref([
   {
     name: '用户管理',
     icon: '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
-    bg: 'linear-gradient(135deg, var(--jade-deep), var(--jade-medium))',
+    bg: 'linear-gradient(135deg, #3b82f6, #60a5fa)',
     path: '/system/user'
   },
   {
@@ -326,14 +326,14 @@ async function initCharts() {
           type: 'line',
           smooth: true,
           data: [5, 8, 6, 10, 12, 15, 8],
-          lineStyle: { color: '#2a6b5e', width: 3 },
+          lineStyle: { color: '#3b82f6', width: 3 },
           areaStyle: {
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              { offset: 0, color: 'rgba(42, 107, 94, 0.3)' },
-              { offset: 1, color: 'rgba(42, 107, 94, 0)' }
+              { offset: 0, color: 'rgba(59, 130, 246, 0.3)' },
+              { offset: 1, color: 'rgba(59, 130, 246, 0)' }
             ])
           },
-          itemStyle: { color: '#2a6b5e' },
+          itemStyle: { color: '#3b82f6' },
           symbol: 'circle',
           symbolSize: 6
         },
@@ -388,7 +388,7 @@ async function initCharts() {
             label: { show: true, fontSize: 14, fontWeight: 'bold' }
           },
           data: [
-            { value: 35, name: '环保公益', itemStyle: { color: '#2a6b5e' } },
+            { value: 35, name: '环保公益', itemStyle: { color: '#3b82f6' } },
             { value: 25, name: '社区服务', itemStyle: { color: '#c43a31' } },
             { value: 20, name: '教育支教', itemStyle: { color: '#c9a94e' } },
             { value: 15, name: '文化传承', itemStyle: { color: '#4a5240' } },

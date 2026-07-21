@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "markdown-docx": "^1.7.0"
+  }
+}

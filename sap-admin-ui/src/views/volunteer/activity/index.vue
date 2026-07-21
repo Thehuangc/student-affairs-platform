@@ -77,7 +77,7 @@
     <div class="table-card">
       <div class="table-header">
         <h3>活动列表</h3>
-        <button class="btn-primary" @click="handleAdd">
+        <button v-if="isAdmin" class="btn-primary" @click="handleAdd">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
             <line x1="12" y1="5" x2="12" y2="19" />
             <line x1="5" y1="12" x2="19" y2="12" />
@@ -140,7 +140,7 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="180" fixed="right">
+        <el-table-column v-if="isAdmin" label="操作" width="180" fixed="right">
           <template #default="{ row }">
             <div class="action-cell">
               <button class="action-btn edit" @click="handleEdit(row)">
@@ -233,6 +233,22 @@
         <el-form-item label="最大人数" prop="maxParticipants">
           <el-input-number v-model="form.maxParticipants" :min="1" :max="1000" style="width: 100%" />
         </el-form-item>
+        <div class="form-row">
+          <el-form-item label="组织者" class="form-col">
+            <el-input v-model="form.organizer" placeholder="请输入组织者" />
+          </el-form-item>
+          <el-form-item label="联系人" class="form-col">
+            <el-input v-model="form.contactPerson" placeholder="请输入联系人" />
+          </el-form-item>
+        </div>
+        <div class="form-row">
+          <el-form-item label="联系电话" class="form-col">
+            <el-input v-model="form.contactPhone" placeholder="请输入联系电话" />
+          </el-form-item>
+          <el-form-item label="签到码" class="form-col">
+            <el-input v-model="form.checkInCode" placeholder="签到码（可选）" />
+          </el-form-item>
+        </div>
         <el-form-item label="活动内容">
           <el-input v-model="form.content" type="textarea" :rows="4" placeholder="请输入活动内容" />
         </el-form-item>
@@ -251,6 +267,9 @@
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus'
 import { getActivityPage, createActivity, updateActivity, cancelActivity } from '@/api/volunteer'
+import { usePermission } from '@/utils/permission'
+
+const { isAdmin, canEdit, canDelete } = usePermission()
 
 const loading = ref(false)
 const submitLoading = ref(false)
@@ -276,6 +295,10 @@ const form = reactive({
   startTime: '',
   endTime: '',
   maxParticipants: 50,
+  organizer: '',
+  contactPerson: '',
+  contactPhone: '',
+  checkInCode: '',
   content: ''
 })
 
@@ -353,6 +376,10 @@ function handleAdd() {
   form.startTime = ''
   form.endTime = ''
   form.maxParticipants = 50
+  form.organizer = ''
+  form.contactPerson = ''
+  form.contactPhone = ''
+  form.checkInCode = ''
   form.content = ''
   dialogVisible.value = true
 }
@@ -368,6 +395,10 @@ function handleEdit(row: any) {
     startTime: row.start_time,
     endTime: row.end_time,
     maxParticipants: row.max_participants,
+    organizer: row.organizer || '',
+    contactPerson: row.contact_person || '',
+    contactPhone: row.contact_phone || '',
+    checkInCode: row.check_in_code || '',
     content: row.content || ''
   })
   dialogVisible.value = true

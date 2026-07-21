@@ -7,7 +7,7 @@
       </div>
     </div>
     <div class="card-container" style="margin-top: 24px;">
-      <div style="margin-bottom:16px">
+      <div v-if="isAdmin" style="margin-bottom:16px">
         <el-button type="primary" @click="handleAdd">新增备案</el-button>
       </div>
       <el-table :data="reviewList" v-loading="loading" border stripe>
@@ -24,8 +24,10 @@
           </template>
         </el-table-column>
         <el-table-column prop="reviewer_name" label="审核人" width="100" />
-        <el-table-column prop="review_time" label="审核时间" width="170" />
-        <el-table-column label="操作" width="150" fixed="right">
+        <el-table-column label="审核时间" width="160">
+          <template #default="{ row }">{{ formatDateTime(row.review_time) }}</template>
+        </el-table-column>
+        <el-table-column v-if="isAdmin" label="操作" width="150" fixed="right">
           <template #default="{ row }">
             <el-button v-if="row.review_result === 0" type="success" link size="small" @click="handleAudit(row, 1)">通过</el-button>
             <el-button v-if="row.review_result === 0" type="danger" link size="small" @click="handleAudit(row, 2)">不通过</el-button>
@@ -69,6 +71,10 @@
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { getReviewPage, addReview, auditReview } from '@/api/league'
+import { usePermission } from '@/utils/permission'
+import { formatDateTime } from '@/utils/date'
+
+const { isAdmin } = usePermission()
 
 const loading = ref(false)
 const total = ref(0)

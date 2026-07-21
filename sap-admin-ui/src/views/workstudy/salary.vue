@@ -13,7 +13,7 @@
         <el-button type="primary" @click="handleQuery">查询</el-button>
         <el-button @click="resetQuery">重置</el-button>
         <div style="flex:1" />
-        <el-button type="primary" @click="handleAdd">生成薪资</el-button>
+        <el-button v-if="isAdmin" type="primary" @click="handleAdd">生成薪资</el-button>
       </div>
 
       <el-table :data="salaryList" v-loading="loading" border stripe>
@@ -37,7 +37,7 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="120" fixed="right">
+        <el-table-column v-if="isAdmin" label="操作" width="120" fixed="right">
           <template #default="{ row }">
             <el-button v-if="row.status === 0" type="warning" link size="small" @click="handlePay(row, 1)">确认</el-button>
             <el-button v-if="row.status === 1" type="success" link size="small" @click="handlePay(row, 2)">发放</el-button>
@@ -83,6 +83,9 @@
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { getSalaryPage, generateSalary, paySalary } from '@/api/workstudy'
+import { usePermission } from '@/utils/permission'
+
+const { isAdmin } = usePermission()
 
 const loading = ref(false)
 const total = ref(0)
