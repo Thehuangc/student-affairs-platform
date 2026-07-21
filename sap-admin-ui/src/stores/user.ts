@@ -62,8 +62,29 @@ export const useUserStore = defineStore('user', () => {
           return userInfo.value
         } catch(e) {}
       }
-      // 否则调用API获取
-      // 这里可以调用 /api/user/info 接口
+      // 调用API获取用户信息
+      try {
+        const res: any = await request({
+          url: '/user/info',
+          method: 'get'
+        })
+        if (res.code === 200) {
+          userInfo.value = {
+            userId: res.data.id,
+            username: res.data.username,
+            nickname: res.data.nickname,
+            avatar: res.data.avatar || '',
+            roles: res.data.roles || ['student'],
+            permissions: ['*:*:*']
+          }
+          // 同步缓存到localStorage
+          localStorage.setItem('user', JSON.stringify(userInfo.value))
+          return userInfo.value
+        }
+      } catch (e) {
+        console.error('获取用户信息失败:', e)
+        throw e
+      }
     }
     return userInfo.value
   }

@@ -139,3 +139,55 @@ export function getUserActivities(userId: number) {
     method: 'get'
   })
 }
+
+/**
+ * 获取活动报名列表
+ */
+export function getActivityEnrolls(activityId: number) {
+  return request({
+    url: `/volunteer/activity/${activityId}/enrolls`,
+    method: 'get'
+  })
+}
+
+/**
+ * 获取活动签到列表
+ */
+export function getActivityCheckins(activityId: number) {
+  return request({
+    url: `/volunteer/activity/${activityId}/checkins`,
+    method: 'get'
+  })
+}
+
+/**
+ * 分页查询志愿者列表
+ */
+export function getVolunteerList(params: {
+  pageNum?: number
+  pageSize?: number
+  realName?: string
+  status?: number
+}) {
+  return request({
+    url: '/volunteer/list',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 分页查询时长记录
+ */
+export function getHoursPage(params: {
+  pageNum?: number
+  pageSize?: number
+  userId?: number
+  statMonth?: string
+}) {
+  return request({
+    url: '/volunteer/hours/page',
+    method: 'get',
+    params
+  })
+}

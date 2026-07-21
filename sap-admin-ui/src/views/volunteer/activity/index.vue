@@ -92,7 +92,7 @@
           <template #default="{ row }">
             <div class="activity-title-cell">
               <span class="title-text">{{ row.title }}</span>
-              <span class="title-type">{{ row.activityType }}</span>
+              <span class="title-type">{{ row.activity_type }}</span>
             </div>
           </template>
         </el-table-column>
@@ -100,12 +100,12 @@
         <el-table-column label="时间" width="180">
           <template #default="{ row }">
             <div class="time-cell">
-              <span>{{ formatDateTime(row.startTime) }}</span>
+              <span>{{ formatDateTime(row.start_time) }}</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
                 <path d="M5 12h14" />
                 <path d="M12 5l7 7-7 7" />
               </svg>
-              <span>{{ formatDateTime(row.endTime) }}</span>
+              <span>{{ formatDateTime(row.end_time) }}</span>
             </div>
           </template>
         </el-table-column>
@@ -125,11 +125,11 @@
                     fill="none"
                     stroke="var(--jade-deep)"
                     stroke-width="3"
-                    :stroke-dasharray="`${(row.currentParticipants / row.maxParticipants) * 100}, 100`"
+                    :stroke-dasharray="`${(row.current_participants / row.max_participants) * 100}, 100`"
                   />
                 </svg>
               </div>
-              <span>{{ row.currentParticipants }}/{{ row.maxParticipants }}</span>
+              <span>{{ row.current_participants }}/{{ row.max_participants }}</span>
             </div>
           </template>
         </el-table-column>
@@ -360,7 +360,16 @@ function handleAdd() {
 // 编辑
 function handleEdit(row: any) {
   dialogTitle.value = '编辑活动'
-  Object.assign(form, row)
+  Object.assign(form, {
+    id: row.id,
+    title: row.title,
+    activityType: row.activity_type || '',
+    location: row.location,
+    startTime: row.start_time,
+    endTime: row.end_time,
+    maxParticipants: row.max_participants,
+    content: row.content || ''
+  })
   dialogVisible.value = true
 }
 
