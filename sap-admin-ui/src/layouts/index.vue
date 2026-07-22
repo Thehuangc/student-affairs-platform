@@ -241,11 +241,11 @@ function toggleCollapse() {
 }
 
 // 下拉命令
-function handleCommand(command: string) {
+async function handleCommand(command: string) {
   if (command === 'profile') {
     router.push('/profile')
   } else if (command === 'logout') {
-    userStore.logout()
+    await userStore.logout()
     router.push('/login')
   }
 }

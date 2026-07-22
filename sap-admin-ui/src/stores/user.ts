@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import Cookies from 'js-cookie'
 import request from '@/utils/request'
+import router from '@/router'
 
 interface UserInfo {
   userId: number
@@ -100,6 +101,7 @@ export const useUserStore = defineStore('user', () => {
       console.error('退出登录失败:', e)
     } finally {
       clearToken()
+      router.push('/login')
     }
   }
 

@@ -44,6 +44,12 @@ async function query(sql, params = []) {
   return rows;
 }
 
+// 辅助：检查当前用户是否为管理员
+async function isAdmin(userId) {
+  const users = await query('SELECT roles FROM users WHERE id = ?', [userId]);
+  return users.length > 0 && users[0].roles && users[0].roles.split(',').includes('admin');
+}
+
 // ==================== 认证 ====================
 
 app.post('/api/auth/login', async (req, res) => {
@@ -182,6 +188,14 @@ app.get('/api/user/list', authMiddleware, async (req, res) => {
     const { pageNum = 1, pageSize = 10, username, status } = req.query;
     let where = '1=1';
     let params = [];
+    
+    // 非管理员只能查看自己的信息
+    const admin = await isAdmin(req.user.userId);
+    if (!admin) {
+      where += ' AND id = ?';
+      params.push(req.user.userId);
+    }
+    
     if (username) { where += ' AND username LIKE ?'; params.push(`%${username}%`); }
     if (status !== undefined) { where += ' AND status = ?'; params.push(parseInt(status)); }
 
@@ -502,6 +516,12 @@ app.post('/api/volunteer/activity/:id/check-out', authMiddleware, async (req, re
 // 获取用户参与的活动
 app.get('/api/volunteer/activity/user/:userId', authMiddleware, async (req, res) => {
   try {
+    // 非管理员只能查看自己的参与记录
+    const admin = await isAdmin(req.user.userId);
+    if (!admin && parseInt(req.params.userId) !== req.user.userId) {
+      return res.json({ code: 403, msg: '无权查看他人记录', data: null });
+    }
+    
     const rows = await query(
       'SELECT a.*, e.enroll_time, e.status as enroll_status FROM activities a LEFT JOIN activity_enrolls e ON a.id=e.activity_id WHERE e.user_id=? ORDER BY e.enroll_time DESC',
       [req.params.userId]
@@ -515,6 +535,11 @@ app.get('/api/volunteer/activity/user/:userId', authMiddleware, async (req, res)
 // 获取活动报名列表
 app.get('/api/volunteer/activity/:id/enrolls', authMiddleware, async (req, res) => {
   try {
+    // 非管理员不能查看报名列表
+    const admin = await isAdmin(req.user.userId);
+    if (!admin) {
+      return res.json({ code: 403, msg: '无权查看报名列表', data: null });
+    }
     const rows = await query('SELECT * FROM activity_enrolls WHERE activity_id=? ORDER BY enroll_time DESC', [req.params.id]);
     res.json({ code: 200, msg: '操作成功', data: rows });
   } catch (e) {
@@ -525,6 +550,11 @@ app.get('/api/volunteer/activity/:id/enrolls', authMiddleware, async (req, res) 
 // 获取活动签到列表
 app.get('/api/volunteer/activity/:id/checkins', authMiddleware, async (req, res) => {
   try {
+    // 非管理员不能查看签到列表
+    const admin = await isAdmin(req.user.userId);
+    if (!admin) {
+      return res.json({ code: 403, msg: '无权查看签到列表', data: null });
+    }
     const rows = await query('SELECT * FROM check_ins WHERE activity_id=? ORDER BY check_in_time DESC', [req.params.id]);
     res.json({ code: 200, msg: '操作成功', data: rows });
   } catch (e) {
@@ -539,6 +569,14 @@ app.get('/api/volunteer/list', authMiddleware, async (req, res) => {
     const { pageNum = 1, pageSize = 10, realName, status } = req.query;
     let where = '1=1';
     let params = [];
+    
+    // 非管理员只能查看自己的志愿者信息
+    const admin = await isAdmin(req.user.userId);
+    if (!admin) {
+      where += ' AND user_id = ?';
+      params.push(req.user.userId);
+    }
+    
     if (realName) { where += ' AND real_name LIKE ?'; params.push(`%${realName}%`); }
     if (status !== undefined) { where += ' AND status = ?'; params.push(parseInt(status)); }
     
@@ -558,8 +596,18 @@ app.get('/api/volunteer/checkin/page', authMiddleware, async (req, res) => {
     const { pageNum = 1, pageSize = 10, activityId, userId } = req.query;
     let where = '1=1';
     let params = [];
+    
+    // 非管理员只能看到自己的签到记录
+    const admin = await isAdmin(req.user.userId);
+    if (!admin) {
+      where += ' AND user_id = ?';
+      params.push(req.user.userId);
+    } else if (userId) {
+      where += ' AND user_id = ?';
+      params.push(parseInt(userId));
+    }
+    
     if (activityId) { where += ' AND activity_id = ?'; params.push(parseInt(activityId)); }
-    if (userId) { where += ' AND user_id = ?'; params.push(parseInt(userId)); }
     
     const total = (await query(`SELECT COUNT(*) as c FROM check_ins WHERE ${where}`, params))[0].c;
     const offset = Math.floor((parseInt(pageNum) - 1) * parseInt(pageSize));
@@ -577,7 +625,17 @@ app.get('/api/volunteer/hours/page', authMiddleware, async (req, res) => {
     const { pageNum = 1, pageSize = 10, userId, statMonth } = req.query;
     let where = '1=1';
     let params = [];
-    if (userId) { where += ' AND user_id = ?'; params.push(parseInt(userId)); }
+    
+    // 非管理员只能看到自己的时长记录
+    const admin = await isAdmin(req.user.userId);
+    if (!admin) {
+      where += ' AND user_id = ?';
+      params.push(req.user.userId);
+    } else if (userId) {
+      where += ' AND user_id = ?';
+      params.push(parseInt(userId));
+    }
+    
     if (statMonth) { where += ' AND stat_month = ?'; params.push(statMonth); }
     
     const total = (await query(`SELECT COUNT(*) as c FROM hours_records WHERE ${where}`, params))[0].c;
@@ -598,6 +656,14 @@ app.get('/api/league/application/page', authMiddleware, async (req, res) => {
     const { pageNum = 1, pageSize = 10, realName, status } = req.query;
     let where = '1=1';
     let params = [];
+    
+    // 非管理员只能看到自己的申请
+    const admin = await isAdmin(req.user.userId);
+    if (!admin) {
+      where += ' AND user_id = ?';
+      params.push(req.user.userId);
+    }
+    
     if (realName) { where += ' AND real_name LIKE ?'; params.push(`%${realName}%`); }
     if (status !== undefined) { where += ' AND status = ?'; params.push(parseInt(status)); }
     
@@ -617,6 +683,13 @@ app.get('/api/league/application/:id', authMiddleware, async (req, res) => {
   try {
     const rows = await query('SELECT * FROM league_applications WHERE id=?', [req.params.id]);
     if (rows.length === 0) return res.json({ code: 404, msg: '申请不存在', data: null });
+    
+    // 非管理员只能查看自己的申请
+    const admin = await isAdmin(req.user.userId);
+    if (!admin && rows[0].user_id !== req.user.userId) {
+      return res.json({ code: 403, msg: '无权查看他人申请', data: null });
+    }
+    
     res.json({ code: 200, msg: '操作成功', data: rows[0] });
   } catch (e) {
     res.json({ code: 500, msg: '服务器错误', data: null });
@@ -665,7 +738,16 @@ app.get('/api/league/review/page', authMiddleware, async (req, res) => {
     const { pageNum = 1, pageSize = 10, userId } = req.query;
     let where = '1=1';
     let params = [];
-    if (userId) { where += ' AND user_id = ?'; params.push(parseInt(userId)); }
+    
+    // 非管理员只能看到自己的政审记录
+    const admin = await isAdmin(req.user.userId);
+    if (!admin) {
+      where += ' AND user_id = ?';
+      params.push(req.user.userId);
+    } else if (userId) {
+      where += ' AND user_id = ?';
+      params.push(parseInt(userId));
+    }
     
     const total = (await query(`SELECT COUNT(*) as c FROM political_reviews WHERE ${where}`, params))[0].c;
     const offset = Math.floor((parseInt(pageNum) - 1) * parseInt(pageSize));
@@ -711,7 +793,16 @@ app.get('/api/league/archive/page', authMiddleware, async (req, res) => {
     const { pageNum = 1, pageSize = 10, userId } = req.query;
     let where = '1=1';
     let params = [];
-    if (userId) { where += ' AND user_id = ?'; params.push(parseInt(userId)); }
+    
+    // 非管理员只能看到自己的档案
+    const admin = await isAdmin(req.user.userId);
+    if (!admin) {
+      where += ' AND user_id = ?';
+      params.push(req.user.userId);
+    } else if (userId) {
+      where += ' AND user_id = ?';
+      params.push(parseInt(userId));
+    }
     
     const total = (await query(`SELECT COUNT(*) as c FROM league_archives WHERE ${where}`, params))[0].c;
     const offset = Math.floor((parseInt(pageNum) - 1) * parseInt(pageSize));
@@ -814,6 +905,14 @@ app.get('/api/workstudy/application/page', authMiddleware, async (req, res) => {
     const { pageNum = 1, pageSize = 10, positionId, status } = req.query;
     let where = '1=1';
     let params = [];
+    
+    // 非管理员只能看到自己的申请
+    const admin = await isAdmin(req.user.userId);
+    if (!admin) {
+      where += ' AND user_id = ?';
+      params.push(req.user.userId);
+    }
+    
     if (positionId) { where += ' AND position_id = ?'; params.push(parseInt(positionId)); }
     if (status !== undefined) { where += ' AND status = ?'; params.push(parseInt(status)); }
     
@@ -867,7 +966,17 @@ app.get('/api/workstudy/attendance/page', authMiddleware, async (req, res) => {
     const { pageNum = 1, pageSize = 10, userId, positionId, checkDate } = req.query;
     let where = '1=1';
     let params = [];
-    if (userId) { where += ' AND user_id = ?'; params.push(parseInt(userId)); }
+    
+    // 非管理员只能看到自己的考勤
+    const admin = await isAdmin(req.user.userId);
+    if (!admin) {
+      where += ' AND user_id = ?';
+      params.push(req.user.userId);
+    } else if (userId) {
+      where += ' AND user_id = ?';
+      params.push(parseInt(userId));
+    }
+    
     if (positionId) { where += ' AND position_id = ?'; params.push(parseInt(positionId)); }
     if (checkDate) { where += ' AND check_date = ?'; params.push(checkDate); }
     
@@ -921,7 +1030,17 @@ app.get('/api/workstudy/salary/page', authMiddleware, async (req, res) => {
     const { pageNum = 1, pageSize = 10, userId, salaryMonth } = req.query;
     let where = '1=1';
     let params = [];
-    if (userId) { where += ' AND user_id = ?'; params.push(parseInt(userId)); }
+    
+    // 非管理员只能看到自己的薪资
+    const admin = await isAdmin(req.user.userId);
+    if (!admin) {
+      where += ' AND user_id = ?';
+      params.push(req.user.userId);
+    } else if (userId) {
+      where += ' AND user_id = ?';
+      params.push(parseInt(userId));
+    }
+    
     if (salaryMonth) { where += ' AND salary_month = ?'; params.push(salaryMonth); }
     
     const total = (await query(`SELECT COUNT(*) as c FROM ws_salary WHERE ${where}`, params))[0].c;
